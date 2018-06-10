@@ -34,7 +34,7 @@
         "symfony/swiftmailer-bundle": "^2.6.4",
         "symfony/symfony": "3.4.*",
         "twig/twig": "^1.0||^2.0",
-                "incenteev/composer-parameter-handler": "~2.0"
+        "incenteev/composer-parameter-handler": "~2.0"
     },
     "scripts": {
         "post-install-cmd": [
@@ -48,7 +48,6 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         }
-    }
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
