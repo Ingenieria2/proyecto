@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+{% block title %}Usuarios por Rol{% endblock %}
+{% block javascripts %}
+<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#ListUserTable').DataTable({
+      "lengthChange": false,
+      "autoWidth": true,
+      language: {
+        searchPlaceholder: "Buscar...",
+        paginate: {
+            previous: 'Anterior',
+            next:     'Siguiente'
+        },
+        aria: {
+            paginate: {
+                previous: 'Previous',
+                next:     'Next'
+            }
+        }
+      }
+    });
+} );
+</script>
+{% endblock %}
+{% block contenido %}
+<div class="my-5">
+  <h1>Listado de usuarios por rol</h1>
+  <br>
+  <table id="ListUserTable" class="table table-hover" data-order='[[ 1, "asc" ]]' style="width:100%" data-page-length={{ resultadosporpagina }}>
+    <thead>
+      <tr>
+        <th colspan="3">Usuario</th>
+        <th colspan="3">Rol</th>
+      </tr>
+      <tr>
+        <th>Username</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        {% for rol in roles %}
+          <th>{{ rol.getDescripcion }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for user in usuarios %}
+      <tr title="{{ user.username }}">
+        <td data-title="Usuario">{{ user.username }}</td>
+        <td data-title="Nombre">{{ user.nombre }}</td>
+        <td data-title="Apellido">{{ user.apellido }}</td>
+        {% for rol in roles %}
+          <td data-title={{ rol.getNombre }}><a href="{{ path('setRol',{ rolName : rol.getNombre, idUsuario : user.id_usuario }) }}">{% if rol.getNombre in user.roles %}<i class="fas fa-check"></i>{% else %}<i class="fas fa-times"></i>{% endif %}</a></td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+
+    </tbody>
+  </table>
+</div>
+{% endblock %}

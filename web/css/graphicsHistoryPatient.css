@@ -1,0 +1,99 @@
+/*Tabla de presentacion*/
+#patientHistoriData {
+  width: 100%;
+  margin: 20px 0px;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px;
+  background: blanchedalmond;
+}
+
+#patientHistoriData thead tr th {
+  padding-top: 11px;
+  padding-bottom: 11px;
+  background-color: #fd0000;
+  color: white;
+}
+
+#patientHistoriData tbody tr td {
+  height: 50px;
+}
+
+#patientHistoriData tbody tr {
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
+  border: 1px solid #ccc;
+}
+
+#patientHistoriData tbody tr td, #patientHistoriData thead tr th {
+  display: table-cell;
+  align-content: inherit;
+  text-align: center;
+}
+
+#patientHistoriData tbody tr td > form {
+  display: inline;
+}
+
+#patientHistoriData thead tr { 
+  display: none;
+}
+
+#patientHistoriData tbody tr td { 
+  border: none;
+  border-bottom: 1px solid #eee; 
+  position: relative;
+  white-space: normal;
+  text-align:left;
+}
+
+#patientHistoriData tbody tr td:before { 
+  top: 6px;
+  left: 6px;
+  width: 45%; 
+  padding-right: 10px; 
+  white-space: nowrap;
+  text-align:left;
+  font-weight: bold; 
+  content: attr(data-title); 
+}
+
+@media only screen and (max-width: 600px) 
+{ 
+  #patientHistoriData table, #patientHistoriData thead, #patientHistoriData tbody, #patientHistoriData th, #patientHistoriData td, #patientHistoriData tr , #patientHistoriData caption { 
+    display: block; 
+  }
+}
+
+
+@media only screen and (max-width: 600px) 
+{ 
+  #patientHistoriData tbody tr td {
+    border: none;
+    border-bottom: 1px solid #eee;
+    position: relative;
+    padding-left: 50%;
+    white-space: normal;
+    text-align: left;
+  }
+}
+
+@media print
+{
+  .graficoPantalla, #curvaCrecimiento, #curvaTalla, #curvaPPC{
+    display: block;
+    page-break-before: always;
+  }
+
+  .flex-container, header, .botonGeneral {
+    display: none;
+  }
+
+  body, .graficoPantalla, #curvaCrecimiento, #curvaTalla, #curvaPPC{
+    float: none;
+    width: auto;
+    margin: 0;
+    padding: 0;
+  }
+}

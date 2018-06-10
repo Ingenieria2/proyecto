@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Welcome!{% endblock %}</title>
+  <link href="{{asset('vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+  <link href="{{asset('css/modern-business.css')}}" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+  {% block stylesheets %}{% endblock %}
+  <link rel="icon" type="image/x-icon" href="{{ asset('image/logoHeader.png') }}" />
+</head>
+<body>
+  <!-- Navigation -->
+  {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    {% include ('./navbar/navbar_logueado.html.twig') %}
+  {% else %}
+    {% include ('./navbar/navbar_login.html.twig') %}
+  {% endif %}
+  {% block contenido %}{% endblock %}
+  <!-- Footer -->
+   {% include ('./footer.html.twig') %}
+    <script src="{{ asset('vendor/jquery/jquery.min.js')}}" ></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

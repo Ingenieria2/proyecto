@@ -1,0 +1,6 @@
+  <footer class="footer bg-dark fixed-bottom">
+    <div class="container">
+      <p class="m-0 text-center text-white">Grupo 25 - {% if app.session.get('contacto') %}{{app.session.get('contacto')}}{% else %} {{contacto}} {% endif %} -Proyecto de Software 2017&copy;</p>
+    </div>
+    <!-- /.container -->
+  </footer>

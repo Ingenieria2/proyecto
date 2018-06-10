@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'formFields.html.twig' %}
+{% block title %}Configuración{% endblock %}
+{% block contenido %}
+<script type="text/javascript" src="js/validarUsuario.js"></script>
+<div class="card mx-auto my-5" style="max-width: 500px;">
+  {{ form_start(form) }}
+  <fieldset class="form-box mx-3 my-3">
+    <legend class="mt-3">Configuración del Sistema</legend>
+    <hr>
+    <div class="form-group mx-3">
+        {{ form_label(form.fecha) }}
+        {{ form_widget(form.fecha) }}
+    </div>
+        <div class="form-group mx-3">
+        {{ form_label(form.edad) }}
+        {{ form_widget(form.edad) }}
+    </div>
+    <div class="form-group mx-3">
+        {{ form_label(form.peso) }}
+        {{ form_widget(form.peso) }}
+        {{ form_errors(form.peso) }}
+        <div class="col-sm-15">
+          {{ form_widget(form.peso) }}
+            {% if form_errors(form.peso) %}<span class="glyphicon glyphicon-remove form-control-feedback"></span>{% endif %}
+        </div>
+    </div>
+    <div class="form-group mx-3 {% if form_errors(form.vacunasCompletas) %}has-error has-feedback{% endif %}">
+        {{ form_label(form.vacunasCompletas) }}
+        {{ form_widget(form.vacunasCompletas) }}
+        {{ form_errors(form.vacunasCompletas) }}
+    </div>
+    <div class="form-group mx-3">
+        {{ form_label(form.vacunasObservaciones) }}
+        {{ form_widget(form.vacunasObservaciones) }}
+        {{ form_errors(form.vacunasObservaciones) }}
+    </div>
+    <div class="form-group mx-3">
+        {{ form_row(form.maduracionAcorde) }}
+    </div>
+        <div class="form-group mx-3">
+        {{ form_row(form.maduracionObservaciones) }}
+    </div>
+        <div class="form-group mx-3">
+        {{ form_row(form.examenFisicoNormal) }}
+    </div>
+        <div class="form-group mx-3">
+        {{ form_row(form.examenFisicoObservaciones) }}
+    </div>
+        <div class="form-group mx-3">
+        {{ form_row(form.pc) }}
+    </div>
+        <div class="form-group mx-3">
+        {{ form_row(form.ppc) }}
+    </div>
+        <div class="form-group mx-3">
+        {{ form_row(form.talla) }}
+    </div>
+        <div class="form-group mx-3">
+        {{ form_row(form.alimentacion) }}
+    </div>
+        <div class="form-group mx-3">
+        {{ form_row(form.observacionesGenerales) }}
+    </div>
+    <hr>
+     {{ form_widget(form.SingUpClinicHistory) }}
+    <a href="{{path('homepage')}}" class="btn">Cancelar</a>
+    </fieldset>
+  {{ form_end(form) }}
+</div>
+{% endblock %}

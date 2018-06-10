@@ -1,0 +1,200 @@
+{% extends 'base.html.twig' %}
+{% block title %}Pacientes{% endblock %}
+{% block javascripts %}
+<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap4.min.js"></script>
+<script type="text/javascript" src="{{asset('js/graficoEstadisticoPaciente.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/canvasjs/canvasjs.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/jsPDF/jspdf.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/jsPDF/dist/jspdf.debug.js')}}"></script>
+<script type="text/javascript" src="{{asset('js/jsPDF/dist/jspdf.min.js')}}"></script>
+<script>
+$(document).ready(function() {
+    $('#ListPatientTable').DataTable({
+      "lengthChange": false,
+      "autoWidth": true,
+      language: {
+        searchPlaceholder: "Buscar...",
+        paginate: {
+            previous: 'Anterior',
+            next:     'Siguiente'
+        },
+        aria: {
+            paginate: {
+                previous: 'Previous',
+                next:     'Next'
+            }
+        }
+      }
+    });
+} );
+</script>
+{% endblock %}
+{% block contenido %}
+<div class="m-5">
+  <table id="ListPatientTable" class="table table-hover" data-order='[[ 1, "asc" ]]' style="width:100%" data-page-length={{ resultadosporpagina }}>
+    {#<caption>Listado de Pacientes</caption>#}
+    <thead>
+      <tr scope="row">
+        <th>Apellido</th>
+        <th>Nombre</th>
+        <th>Fecha de nacimiento</th>
+        <th>Genero</th>
+        <th>Tipo de documento</th>
+        <th>Documento</th>
+        <th>Domicilio</th>
+        <th>Telefono</th>
+        <th>Obra social</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    
+    <tbody id="myTable">
+      {% for paciente in pacientes %}
+        <tr title="{{paciente.nombre}} {{paciente.apellido}}" onclick="return document.formHistoryPatient{{paciente.id_paciente}}.submit();">
+          <td data-title="Apellido">{{paciente.apellido}}</td>
+          <td data-title="Nombre">{{paciente.nombre}}</td>
+          <td data-title="Fecah de nacimiento">{{paciente.fecha_Nac|date("d/m/Y")}}</td>
+          <td data-title="Genero">{{paciente.genero}}</td>
+          <td data-title="Tipo de documento">{{tiposDocumento[paciente.id_tipo_documento].nombre}}</td>
+          <td data-title="Documento">{{paciente.documento}}</td>
+          <td data-title="Domicilio">{{paciente.domicilio}}</td>
+          <td data-title="Telefono">{{paciente.telefono}}</td>
+          <td data-title="Obra social">{{obrasSociales[paciente.id_obra_social].nombre}}</td>
+          <td data-title="Acciones" class="row">
+            <a class="m-1 btn {% if paciente.controlSalud %}btn-info{% else %}btn-secondary{% endif %}" href="{{ path('administrarHistoriaClinica',{ 'id' : paciente.id_paciente }) }}"><img class="iconoMenu" src={{asset('image/historiaPaciente.png')}} alt="Historia de Paciente" title="Historia de Paciente {{ paciente.nombre }}"></a>
+
+            <a class="m-1 btn btn-info" href="{{ path('administrarDatosDemograficos',{ 'id' : paciente.id_paciente }) }}"><img class="iconoMenu" src={{asset('image/datos.png')}} alt="Datos demográficos" title="Datos demográficos {{ paciente.nombre }}"></a>
+
+            <a class="m-1 btn btn-info" href="{{ path('modificarPaciente',{ 'id' : paciente.id_paciente }) }}"><img class="iconoMenu" src={{asset('image/editar.png')}} alt="Datos del paciente" title="Datos del paciente {{ paciente.nombre }}"></a>
+
+            {% if is_granted('Paciente_Destroy', app.session.get('Roles')) %}
+              <a class="m-1 btn btn-info" href="{{ path('eliminarPaciente',{ 'id' : paciente.id_paciente }) }}"><img class="iconoMenu" src={{asset('image/eliminar.png') }} alt="Eliminar Datos del paciente" title="Eliminar Datos del paciente {{ paciente.nombre }}"></a>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <br>
+  <div class="row">
+    <button type="button" class="m-1 btn btn-primary" data-toggle="modal" data-target="#curvaBarraModal">
+    Estadistica general
+    </button>
+    <button type="button" class="m-1 btn btn-primary" data-toggle="modal" data-target="#curvaCircularViviendaModal">
+    Estadistica por tipo de vivienda
+    </button>
+    <button type="button" class="m-1 btn btn-primary" data-toggle="modal" data-target="#curvaCircularCalefaccionModal">
+    Estadistica por tipo de calefaccion
+    </button>
+    <button type="button" class="m-1 btn btn-primary" data-toggle="modal" data-target="#curvaCircularAguaModal">
+    Estadistica por tipo de agua
+    </button>
+    <button class="m-1 btn btn-primary" id="printButton" onclick="clickImprimirCurvas();" disabled>Imprimir estadisticas</button> 
+    <button class="m-1 btn btn-primary" id="exportButton" onclick="exportarPDF();" disabled>Exportar estadisticas a PDF</button>
+  </div>
+
+  <!-- The Modal Barra-->
+  <div class="modal fade" id="curvaBarraModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Estadistica general</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="curvaBarra" class="graficoPantalla"></div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- The Modal Vivienda-->
+  <div class="modal fade" id="curvaCircularViviendaModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Estadistica por tipo de vivienda</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="graficoCircularVivienda" class="graficoPantalla"></div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- The Modal Calefaccion-->
+  <div class="modal fade" id="curvaCircularCalefaccionModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Estadistica por tipo de calefaccion</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="graficoCircularCalefaccion" class="graficoPantalla"></div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- The Modal Agua-->
+  <div class="modal fade" id="curvaCircularAguaModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Estadistica por tipo de agua</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="graficoCircularAgua" class="graficoPantalla"></div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Usuarios{% endblock %}
+
+{% block contenido %}
+<div class="mx-auto my-5">
+  <h1>Administrar permisos por Rol</h1>
+    
+  {% for rol in roles %}
+    <a class="m-1 btn btn-info" href="{{ path('setPermiso', { idRol : rol.id}) }}"><h2>Rol {{ rol.Descripcion }}</h2></a>
+    <br>
+  {% endfor %}
+</div>
+{% endblock %}

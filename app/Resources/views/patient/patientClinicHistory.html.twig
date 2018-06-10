@@ -1,0 +1,191 @@
+{% extends 'base.html.twig' %}
+{% block title %}Pacientes{% endblock %}
+{% block javascripts %}
+  <link rel="stylesheet" href={{asset('css/graphicsHistoryPatient.css')}}>
+  <script type="text/javascript" src="{{asset('js/graficoHistorialPaciente.js')}}"></script>
+  <script type="text/javascript" src="{{asset('js/canvasjs/canvasjs.min.js')}}"></script>
+  <script type="text/javascript" src="{{asset('js/jsPDF/jspdf.js')}}"></script>
+  <script type="text/javascript" src="{{asset('js/jsPDF/dist/jspdf.debug.js')}}"></script>
+  <script type="text/javascript" src="{{asset('js/jsPDF/dist/jspdf.min.js')}}"></script>
+  <script>
+  var id_paciente = '{{ paciente.id_paciente }}';
+  </script>
+{% endblock %}
+{% block contenido %}
+<div class="my-5">
+  <h1>Historia clinica</h1>
+
+  <table id="patientHistoriData">
+    <thead>
+      <tr>
+        <th colspan="3">Nombre y Apellido</th>
+      </tr>
+      <tr>
+        <th>Fecha de nacimiento</th>
+        <th colspan="2">Genero</th>
+      </tr>
+      <tr>
+        <th>Documento</th>
+        <th colspan="2">Telefono</th>
+      </tr>
+      <tr>
+        <th colspan="3" >Domicilio</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="3" data-title="Nombre y Apellido">{{paciente.nombre}} {{paciente.apellido}}</td>
+      </tr>
+      <tr>
+        <td data-title="Fecha de nacimiento">{{paciente.fecha_Nac}}</td>
+        <td colspan="2" data-title="Genero">{{paciente.genero}}</td>
+      </tr>
+      <tr>
+        <td data-title="Documento">{{paciente.documento}}</td>
+        <td colspan="2" data-title="Telefono">{{paciente.telefono}}</td>
+      </tr>
+      <tr>
+        <td colspan="3" data-title="Domicilio">{{paciente.domicilio}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  {% if is_granted('HistoriaClinica_New', app.session.get('Roles')) %}
+    <div>
+      <a class="m-1 btn btn-primary" href="{{ path('altaHistoriaClinica',{ 'id' : paciente.id_paciente }) }}">+ Agregar Historia</a>
+    </div>
+    <br>
+  {% endif %}
+
+  {% if listaControlSalud|length > 0 %}
+  <div>
+    <table class="table-striped" style="width:100%" >
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Peso</th>
+          <th>Vacunas completas</th>
+          <th>PC</th>
+          <th>PPC</th>
+          <th>Talla</th>
+          <th>Maduracion acorde</th>
+          <th>Examen Fisico</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+        {% for controlSalud in listaControlSalud %}
+          <tr title="Control {{paciente.nombre}} {{paciente.apellido}}"{% if is_granted('HistoriaClinica_Update', app.session.get('Roles')) %} onclick="return document.modificarControlSalud{{ controlSalud.id_control_salud }}.submit();"{% endif %}>
+            <td data-title="Fecha">{{ controlSalud.fecha|date("d/m/Y") }}</td>
+            <td data-title="Peso">{{ controlSalud.peso }}</td>
+            <td data-title="Vacunas completas">{% if controlSalud.vacunas_completas == 1 %}SI{% else %}NO{% endif %}</td>
+            <td data-title="PC">{{ controlSalud.pc }}</td>
+            <td data-title="PPC">{{ controlSalud.ppc }}</td>
+            <td data-title="Talla">{{ controlSalud.talla }}</td>
+            <td data-title="Maduracion acorde">{% if controlSalud.maduracion_acorde == 1 %}SI{% else %}NO{% endif %}</td>
+            <td data-title="Examen Fisico">{% if controlSalud.examen_fisico_normal == 1 %}SI{% else %}NO{% endif %}</td>
+            <td data-title="Acciones" class="row">
+            {% if is_granted('HistoriaClinica_Update', app.session.get('Roles')) %}
+              <a class="m-1 btn btn-primary" href="{{ path('modificarHistoriaClinica',{ 'id' : controlSalud.id_control_salud }) }}"><img class="iconoMenu" src="{{ asset('image/editar.png') }}" alt="Submit Form" title="Editar control {{ controlSalud.fecha|date("d/m/Y") }}"></a>
+            {% endif %}
+            {% if is_granted('HistoriaClinica_Destroy', app.session.get('Roles')) %}
+              <a class="m-1 btn btn-primary" href="{{ path('eliminarHistoriaClinica',{ 'id' : controlSalud.id_control_salud }) }}" id="eliminarControlSalud{{ controlSalud.id_control_salud }}"><img class="iconoMenu" src="{{ asset('image/eliminar.png') }}" alt="Submit Form" title="Editar control {{ controlSalud.fecha|date("d/m/Y") }}"></a>
+            {% endif %}
+            </td>
+          </tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+
+  <br>
+  <div class="row">
+    <button type="button" class="m-1 btn btn-primary" data-toggle="modal" data-target="#curvaCrecimientoModal">
+    Curva de Crecimiento
+    </button>
+    <button type="button" class="m-1 btn btn-primary" data-toggle="modal" data-target="#curvaTallaModal">
+    Curva de Talla
+    </button>
+    <button type="button" class="m-1 btn btn-primary" data-toggle="modal" data-target="#curvaPPCModal">
+    Curva de Percentil Periferico
+    </button>
+    <button class="m-1 btn btn-primary" id="printButton" onclick="clickImprimirCurvas();" disabled>Imprimir estadisticas</button> 
+    <button class="m-1 btn btn-primary" id="exportButton" onclick="exportarPDF();" disabled>Exportar estadisticas a PDF</button>
+  </div>
+
+  <!-- The Modal crecimiento-->
+  <div class="modal fade" id="curvaCrecimientoModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Curva de Crecimiento</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="curvaCrecimiento" class="graficoPantalla"></div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- The Modal Talla-->
+  <div class="modal fade" id="curvaTallaModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Curva de Talla</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="curvaTalla" class="graficoPantalla"></div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- The Modal PPC-->
+  <div class="modal fade" id="curvaPPCModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Curva de Percentil Periferico</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div id="curvaPPC" class="graficoPantalla"></div>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

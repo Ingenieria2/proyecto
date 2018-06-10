@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+{% block title %}Registrarse{% endblock %}
+{% block contenido %}
+<script type="text/javascript" src="js/validarUsuario.js"></script>
+<div class="card mx-auto my-5" style="max-width: 500px;">
+	{{ form_start(form) }}
+	<fieldset class="form-box mx-3 my-3">
+		<legend class="mt-3">Registrarse</legend>
+		<hr>
+		<div class="form-group mx-3">
+		    {{ form_label(form.mail) }}
+		    {{ form_widget(form.mail) }}
+		    {% if form_errors(form.mail) %}<span class="alert alert-danger">{{ form_errors(form.mail) }}</span>{% endif %}
+		</div>
+		<div class="form-group mx-3">
+		    {{ form_label(form.username) }}
+		    {{ form_widget(form.username) }}
+		    {% if form_errors(form.username) %}<span class="alert alert-danger">{{ form_errors(form.username) }}</span>{% endif %}
+		</div>
+		<div class="form-group mx-3">
+		    {{ form_label(form.nombre) }}
+		    {{ form_widget(form.nombre) }}
+		    {% if form_errors(form.nombre) %}<span class="alert alert-danger">{{ form_errors(form.nombre) }}</span>{% endif %}
+		</div>
+		<div class="form-group mx-3">
+		    {{ form_label(form.apellido) }}
+		    {{ form_widget(form.apellido) }}
+		    {% if form_errors(form.apellido) %}<span class="alert alert-danger">{{ form_errors(form.apellido) }}</span>{% endif %}
+		</div>
+		<div class="form-group mx-3">
+		    {{ form_row(form.plainPassword.first) }}
+		    {{ form_row(form.plainPassword.second) }}
+		    {% if form_errors(form.plainPassword) %}<span class="alert alert-danger">{{ form_errors(form.plainPassword) }}</span>{% endif %}
+		</div>
+	    <hr>
+	    {{ form_widget(form.SingUp) }}
+		<a href="{{path('homepage')}}" class="btn">Cancelar</a>
+    </fieldset>
+	{{ form_end(form) }}
+</div>
+{% endblock %}

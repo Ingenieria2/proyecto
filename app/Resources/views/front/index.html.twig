@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+{% block title %}Hospital Dr Ricardo Gutierrez{% endblock %}
+{% block contenido %}
+<header>
+  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+      <!-- Slide One - Set the background image for this slide in the line below -->
+      <div class="carousel-item active" style="background-image: url({{ asset('image/imagenInicio_1.png')}})">
+        <div class="carousel-caption d-none d-md-block">
+          <h3>Nuestra Priodidad</h3>
+          <p>son ellos</p>
+        </div>
+      </div>
+      <!-- Slide Two - Set the background image for this slide in the line below -->
+      <div class="carousel-item" style="background-image: url({{ asset('image/imagenInicio_2.png')}})">
+        <div class="carousel-caption d-none d-md-block">
+          <h3>Nuevo sistema</h3>
+          <p>Mejorando el registro y seguimiento de nuestros pacientes</p>
+        </div>
+      </div>
+      <!-- Slide Three - Set the background image for this slide in the line below -->
+      <div class="carousel-item" style="background-image: url({{ asset('image/imagenInicio_3.png')}})">
+        <div class="carousel-caption d-none d-md-block">
+          <h3>Los turnos al alcance de tu mano</h3>
+          <p>Nuevo sistema de asignacion de turnos a traves de una aplicacion para celular</p>
+        </div>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+</header>
+
+<!-- Page Content -->
+<div class="container">
+
+  <h1 class="my-4">Bienvenido a Nuesto Sistema</h1>
+  
+  <!-- Marketing Icons Section -->
+  <div class="row">
+    <div class="col-lg-4 mb-4">
+      <div class="card h-100">
+        <h4 class="card-header">El Hospital</h4>
+        <div class="card-body">
+          <p class="card-text">Este centro de salud tiene un programa de residencias de primer nivel en el pais. Se ofrecen oportunidades de práctica intensiva y supervisada en ámbitos profesionales y por la misma por supuesto se reciben un salario mensual, acorde a lo que la regulación médica profesional lo indica en cada momento</p>
+        </div>
+        <div class="card-footer">
+          <a href="#" class="btn btn-primary">Learn More</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+      <div class="card h-100">
+        <h4 class="card-header">Guardia</h4>
+        <div class="card-body">
+          <p class="card-text">Hospital Dr Ricardo Gutierrez de la Plata dispone de un sofisticado servicio de guardias médicas las 24 horas para la atención de distintas urgencias. La administración de la ionstitución hace viable una eficiente separación de los pacientes según el nivel de seriedad y el tipo de patología</p>
+        </div>
+        <div class="card-footer">
+          <a href="#" class="btn btn-primary">Learn More</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+      <div class="card h-100">
+        <h4 class="card-header">Especialidades</h4>
+        <div class="card-body">
+          <p class="card-text">Acorde a una respetable trayectoria en la materia de medicina y salud, en Hospital Dr Ricardo Gutierrez de la Plata podemos encontrar profesionales de las principales especialidades de salud Del mismo modo, se brinda atención programada y de urgencias, se realizan estudios médicos y se brinda soporte en muchas de las ramas comunes de la medicina moderna</p>
+        </div>
+        <div class="card-footer">
+          <a href="#" class="btn btn-primary">Learn More</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.row -->
+
+</div>
+{% endblock %}

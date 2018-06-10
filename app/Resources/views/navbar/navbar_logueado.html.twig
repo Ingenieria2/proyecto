@@ -1,0 +1,49 @@
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="{{path('homepage')}}">Hospital Dr Ricardo Gutierrez</a>
+
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul id="menu" class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ path('homepage') }}" title="Ir al inicio"><img class="iconoMenu" src={{asset('image/iconoInicio.png')}} alt="Ir al home"/>Inicio</a>
+        </li>
+        {% if is_granted('Administrador_Show', app.session.get('Roles')) %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ path('listaPacientes') }}" title="Administrar pacientes"><img class="iconoMenu" src={{asset('image/iconoPaciente.png')}} alt="Administrar pacientes"/>Pacientes</a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{path('myAcount')}}" title="Administrar Cuenta"><img class="iconoMenu" src={{asset('image/iconoPaciente.png')}} alt="Administrar mi cuenta"/>Mi Cuenta</a>
+        </li>
+
+        {% if is_granted('Administrador_Show', app.session.get('Roles')) %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" data-toggle="dropdown" data-target="opcionesAdmin" title="Opciones Administrador"><img class="iconoMenu" src={{asset('image/iconoAdministrador.png')}} alt="Ir al Opciones Admin"/>Administraci&oacute;n<span class="caret"></span></a>
+          <div class="nav-item bg-dark dropdown-menu" id="opcionesAdmin">
+            <a class="nav-link" href="{{ path('userAdmin') }}" title="Ver la configuraci&oacute;n de usuarios"><img class="iconoMenu" src={{asset('image/iconoUsuarios.png')}} alt="Ir a Usuarios"/>Usuarios</a>
+            <a class="nav-link" href="{{path ('rolAdmin') }}" title="Ver la configuraci&oacute;n de roles"><img class="iconoMenu" src={{asset('image/iconoRol.png')}} alt="Ir a Roles"/>Roles</a>
+            <a class="nav-link" href="{{path ('permissionAdmin') }}" title="Ver la configuraci&oacute;n de permisos"><img class="iconoMenu" src={{asset('image/iconoPermisos.png')}} alt="Ir a Permisos de usuarios"/>Permisos</a>
+            <a class="nav-link" href="{{path ('pageAdmin') }}" title="Ver la configuraci&oacute;n de la pagina web"><img class="iconoMenu" src={{asset('image/iconoConfigurar.png')}} alt="Ir a configuracion de pagina web"/>Configuraci&oacute;n</a>
+          </div>
+        </li>
+        {% endif %}
+
+        {% if ( app.user.roles|length > 1 ) %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown"><img class="iconoMenu" src={{asset('image/iconoRol.png')}} alt="Ir a Roles"/>{{ app.session.get('TodosLosRoles')[app.session.get('RolActivo')] }}
+            <span class="caret"></span></a>
+            <div class="nav-item bg-dark dropdown-menu">
+              {% for un_rol in app.user.roles %}
+                <a class="nav-link" href="{{ path('cambioRol',{ 'nuevoRol' :un_rol}) }}">{{ app.session.get('TodosLosRoles')[un_rol] }}</a>
+              {% endfor %}
+            </div>
+          </li>
+        {% endif %}
+        <li class="nav-item"><a class="nav-link" href="{{ path('logout') }}" title="Cerrar Sesi&oacute;n"><img class="iconoMenu" src={{asset('image/iconoLogout.png')}} alt="Cerrar Sesi&oacute;n"/>Logout</a></li>
+    </ul>
+    </div>
+  </div>
+</nav>
