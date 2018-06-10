@@ -29,7 +29,7 @@ parameters:
                 "dist-file": "app/config/databases.dist.yml",
                 "parameter-key": "config"
             }
-        ]
+        ],
     }
 
 
