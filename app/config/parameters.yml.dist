@@ -23,7 +23,11 @@ parameters:
             "file": "app/config/parameters.yml",
             "dist-file": "some/other/folder/to/other/parameters/file/parameters.yml.dist",
             "keep-outdated": true,
-            "parameter-key": "config" 
+            "parameter-key": "config"
+            "env-map": {
+                "my_first_param": "MY_FIRST_PARAM",
+                "my_second_param": "MY_SECOND_PARAM"
+            }
         }
     }
 
