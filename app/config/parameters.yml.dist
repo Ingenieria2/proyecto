@@ -18,6 +18,7 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret: ThisTokenIsNotSoSecretChangeIt
     
+{
     "extra": {
         "incenteev-parameters": [
             {
@@ -29,7 +30,7 @@ parameters:
                 "dist-file": "app/config/databases.dist.yml",
                 "parameter-key": "config"
             }
-        ],
+        ]
     }
-
+}
 
