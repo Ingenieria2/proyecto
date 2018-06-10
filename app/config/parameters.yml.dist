@@ -26,3 +26,10 @@ parameters:
         }
     }
 }
+{
+    "extra": {
+        "incenteev-parameters": {
+            "keep-outdated": true
+        }
+    }
+}
