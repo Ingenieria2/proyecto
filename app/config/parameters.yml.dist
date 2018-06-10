@@ -22,14 +22,10 @@ parameters:
     "extra": {
         "incenteev-parameters": {
             "file": "app/config/parameters.yml",
-            "dist-file": "some/other/folder/to/other/parameters/file/parameters.yml.dist"
+            "dist-file": "some/other/folder/to/other/parameters/file/parameters.yml.dist",
+            "keep-outdated": true,
+            "parameter-key": "config" 
         }
     }
 }
-{
-    "extra": {
-        "incenteev-parameters": {
-            "keep-outdated": true
-        }
-    }
-}
+
