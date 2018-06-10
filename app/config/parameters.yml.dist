@@ -17,3 +17,12 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret: ThisTokenIsNotSoSecretChangeIt
+    
+    {
+    "extra": {
+        "incenteev-parameters": {
+            "file": "app/config/parameters.yml",
+            "dist-file": "some/other/folder/to/other/parameters/file/parameters.yml.dist"
+        }
+    }
+}
